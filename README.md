@@ -9,6 +9,7 @@ This is a solution to the [REST Countries API with color theme switcher challeng
   - [Overview](#overview)
     - [The challenge](#the-challenge)
     - [Screenshot](#screenshot)
+    - [Links](#links)
   - [My process](#my-process)
     - [Built with](#built-with)
     - [What I learned](#what-i-learned)
@@ -40,12 +41,10 @@ Users should be able to:
 <img style='width:49%;display:inline-block' src="./img/details-dark.png">
 <img style='width:49%;display:inline-block' src="./img/details-light.png">
 
-<!--
 ### Links
 
--   Solution URL: [Add solution URL here](https://your-solution-url.com)
--   Live Site URL: [Add live site URL here](https://your-live-site-url.com)
--->
+-   [Solution URL](https://www.frontendmentor.io/solutions/countries-rest-api-challenge-POej-yzEZU)
+-   [Live Site URL](https://countries-rest-api-challenge-eight.vercel.app/)
 
 ## My process
 
