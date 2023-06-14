@@ -3,7 +3,7 @@ import Image from './Image';
 
 export default function CountryCard({ id, country, setCountryIndex }) {
     return (
-        <button
+        <div
             className="flex flex-col overflow-hidden rounded-md bg-white drop-shadow hover:cursor-pointer focus:border focus:border-blue-400 dark:bg-dark-bg-front"
             onClick={() => setCountryIndex(id)}
         >
@@ -14,6 +14,6 @@ export default function CountryCard({ id, country, setCountryIndex }) {
                 <Info name="Region" value={country.region} />
                 <Info name="Capital" value={country.capital} />
             </div>
-        </button>
+        </div>
     );
 }

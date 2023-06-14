@@ -8,12 +8,12 @@ export default function Header({ darkMode, handleToggle }) {
                 {(darkMode && (
                     <>
                         <MdDarkMode tile="" />
-                        <p>Dark mode</p>
+                        Dark mode
                     </>
                 )) || (
                     <>
                         <MdOutlineDarkMode title="" />
-                        <p>Light mode</p>
+                        Light mode
                     </>
                 )}
             </button>
