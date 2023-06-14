@@ -79,7 +79,7 @@ Users should be able to:
 -   Put React.js knowledge to practice
 -   Basic ESLint and PostCSS configuration
 -   Tailwind CSS
-<!-- -   Deployment to Vercel -->
+-   Deployment to Vercel
 
 ### Useful resources
 
