@@ -33,13 +33,30 @@ Users should be able to:
 
 -   Country Filter:
 
-<img style='width:49%;display:inline-block' src="./img/filter-dark.png">
-<img style='width:49%;display:inline-block' src="./img/filter-light.png">
+<table>
+<tr>
+  <th>Dark Mode</th>
+  <th>Light Mode</th>
+</tr>
+<tr>
+  <td><img src="./img/filter-dark.png"></td>
+  <td><img src="./img/filter-light.png"></td>
+</tr>
+<table>
 
 -   Country Details:
 
-<img style='width:49%;display:inline-block' src="./img/details-dark.png">
-<img style='width:49%;display:inline-block' src="./img/details-light.png">
+  
+<table>
+<tr>
+  <th>Dark Mode</th>
+  <th>Light Mode</th>
+</tr>
+<tr>
+  <td><img src="./img/details-dark.png"></td>
+  <td><img src="./img/details-light.png"></td>
+</tr>
+<table>
 
 ### Links
 
