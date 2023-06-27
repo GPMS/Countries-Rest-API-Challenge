@@ -1,38 +1,48 @@
-import { useId, useState } from 'react';
+import { useId, useState, useEffect } from 'react';
 import { MdSearch } from 'react-icons/md';
 
 import CountryCard from './components/CountryCard';
 
-export default function CountriesFilter({ data, setCountryIndex }) {
-    const [filter, setFilter] = useState({
-        text: '',
-        region: 'default',
-    });
+const API = 'https://restcountries.com/v3.1/';
 
-    function handleInput(e) {
-        let { name, value } = e.target;
-        setFilter((oldFilter) => ({
-            ...oldFilter,
-            [name]: value,
-        }));
-    }
+export default function CountriesFilter({ setCountryCode }) {
+    const [filterText, setFilterText] = useState('');
+    const [filterRegion, setFilterRegion] = useState('default');
+
+    const [countries, setCountries] = useState(null);
+
+    useEffect(() => {
+        async function fetchCountries() {
+            setCountries(null);
+            const endpoint = filterRegion === 'default' ? 'all' : `region/${filterRegion.toLowerCase()}`;
+            try {
+                let res = await fetch(`${API}${endpoint}`);
+                const countries = await res.json();
+                setCountries(countries);
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+        fetchCountries();
+    }, [filterRegion]);
 
     function canShow(country) {
-        if (filter.region !== 'default' && country.region !== filter.region) {
-            return false;
-        }
-        if (filter.text) {
-            let names = country.altSpellings ? [country.name, ...country.altSpellings] : [country.name];
-            if (!names.some((name) => name.toLowerCase().includes(filter.text.toLowerCase()))) {
+        if (filterText) {
+            let names = country.altSpellings ? [country.name.official, ...country.altSpellings] : [country.name];
+            if (!names.some((name) => name.toLowerCase().includes(filterText.toLowerCase()))) {
                 return false;
             }
         }
         return true;
     }
 
-    let shownCountriesCount = data.reduce((prevValue, country) => {
-        return canShow(country) ? prevValue + 1 : prevValue;
-    }, 0);
+    let shownCountriesCount = 0;
+    if (countries) {
+        shownCountriesCount = countries.reduce((prevValue, country) => {
+            return canShow(country) ? prevValue + 1 : prevValue;
+        }, 0);
+    }
 
     const searchId = useId();
 
@@ -42,8 +52,10 @@ export default function CountriesFilter({ data, setCountryIndex }) {
                 <div className="relative">
                     <input
                         id={searchId}
-                        onInput={handleInput}
-                        className="focus-visible:outline:none w-full rounded p-4 pl-[2rem] text-sm drop-shadow focus-visible:border-violet-800 dark:bg-dark-bg-front dark:text-white lg:w-[500px]"
+                        onInput={(e) => {
+                            setFilterText(e.target.value);
+                        }}
+                        className="w-full rounded p-4 pl-[2rem] text-sm drop-shadow focus-visible:border-violet-800 dark:bg-dark-bg-front dark:text-white lg:w-[500px]"
                         type="text"
                         name="text"
                         placeholder="Search for a country..."
@@ -54,7 +66,9 @@ export default function CountriesFilter({ data, setCountryIndex }) {
                 </div>
                 <select
                     className="block rounded bg-white p-2 dark:border-black dark:bg-dark-bg-front"
-                    onChange={handleInput}
+                    onChange={(e) => {
+                        setFilterRegion(e.target.value);
+                    }}
                     name="region"
                 >
                     <option value="default">--Filter by Region--</option>
@@ -65,28 +79,29 @@ export default function CountriesFilter({ data, setCountryIndex }) {
                     <option value="Oceania">Oceania</option>
                 </select>
             </div>
-            {shownCountriesCount > 0 ? (
-                <div className="grid grid-cols-1 gap-14 lg:grid-cols-4">
-                    {data.map((country, index) => {
-                        if (canShow(country))
-                            return (
-                                <CountryCard
-                                    key={index}
-                                    id={index}
-                                    country={country}
-                                    setCountryIndex={setCountryIndex}
-                                />
-                            );
-                        else {
-                            return null;
-                        }
-                    })}
-                </div>
-            ) : (
-                <div className="align-center grid h-full grow place-items-center">
-                    <p>No countries found!</p>
-                </div>
-            )}
+            {(countries &&
+                (shownCountriesCount > 0 ? (
+                    <div className="grid grid-cols-1 gap-14 lg:grid-cols-4">
+                        {countries.map((country, index) => {
+                            if (canShow(country))
+                                return (
+                                    <CountryCard
+                                        key={index}
+                                        id={index}
+                                        country={country}
+                                        setCountryIndex={setCountryCode}
+                                    />
+                                );
+                            else {
+                                return null;
+                            }
+                        })}
+                    </div>
+                ) : (
+                    <div className="align-center grid h-full grow place-items-center">
+                        <p>No countries found!</p>
+                    </div>
+                ))) || <p>Loading</p>}
         </main>
     );
 }

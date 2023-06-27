@@ -46,7 +46,6 @@ Users should be able to:
 
 -   Country Details:
 
-  
 <table>
 <tr>
   <th>Dark Mode</th>
@@ -80,6 +79,7 @@ Users should be able to:
 -   Basic ESLint and PostCSS configuration
 -   Tailwind CSS
 -   Deployment to Vercel
+-   Fetching data from an API
 
 ### Useful resources
 

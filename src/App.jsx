@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 
-import { data } from './data';
 import Header from './components/Header';
 import CountryDetails from './CountryDetails';
 import CountriesFilter from './CountriesFilter';
@@ -20,16 +19,14 @@ export default function App() {
         }
     }, [darkMode]);
 
-    const [countryIndex, setCountryIndex] = useState(-1);
+    const [countryCode, setCountryCode] = useState(null);
 
     return (
         <div className="flex min-h-screen flex-col bg-gray-100 text-gray-950 dark:bg-dark-bg-back dark:text-white">
             <Header darkMode={darkMode} handleToggle={handleToggle} />
-            {countryIndex != -1 ? (
-                <CountryDetails country={data[countryIndex]} data={data} setCountryIndex={setCountryIndex} />
-            ) : (
-                <CountriesFilter data={data} setCountryIndex={setCountryIndex} />
-            )}
+            {(countryCode && (
+                <CountryDetails key={countryCode} countryCode={countryCode} setCountryCode={setCountryCode} />
+            )) || <CountriesFilter setCountryCode={setCountryCode} />}
         </div>
     );
 }
