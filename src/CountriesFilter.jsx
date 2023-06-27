@@ -37,18 +37,18 @@ export default function CountriesFilter({ data, setCountryIndex }) {
     const searchId = useId();
 
     return (
-        <main className="container mx-auto flex h-auto grow flex-col p-7">
-            <div className="mb-10 items-center lg:flex lg:justify-between">
+        <main className="container mx-auto flex h-auto grow flex-col px-4 pt-7">
+            <div className="mb-10 flex flex-col gap-5 lg:flex-row lg:justify-between">
                 <div className="relative">
                     <input
                         id={searchId}
                         onInput={handleInput}
-                        className="focus-visible:outline:none mb-5 rounded p-[.5rem] pl-[2rem] text-sm drop-shadow focus-visible:border-violet-800 dark:bg-dark-bg-front dark:text-white lg:mb-0"
+                        className="focus-visible:outline:none w-full rounded p-4 pl-[2rem] text-sm drop-shadow focus-visible:border-violet-800 dark:bg-dark-bg-front dark:text-white lg:w-[500px]"
                         type="text"
                         name="text"
                         placeholder="Search for a country..."
                     />
-                    <label htmlFor={searchId} className="absolute left-[.5rem] translate-y-[60%] scale-125">
+                    <label htmlFor={searchId} className="absolute left-[.5rem] translate-y-[100%] scale-125">
                         <MdSearch title="Search" />
                     </label>
                 </div>
@@ -66,7 +66,7 @@ export default function CountriesFilter({ data, setCountryIndex }) {
                 </select>
             </div>
             {shownCountriesCount > 0 ? (
-                <div className="grid grid-cols-1 gap-10 px-10 lg:grid-cols-4 lg:gap-5">
+                <div className="grid grid-cols-1 gap-14 lg:grid-cols-4">
                     {data.map((country, index) => {
                         if (canShow(country))
                             return (
