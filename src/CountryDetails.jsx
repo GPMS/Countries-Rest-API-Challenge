@@ -27,7 +27,7 @@ export default function CountryDetails({ countryCode, setCountryCode }) {
         }
 
         fetchCountry();
-    }, []);
+    }, [countryCode]);
 
     return (
         <main className="container mx-auto px-[5%] pb-[10%]">
