@@ -47,31 +47,38 @@ export default function CountryDetails({ countryCode, setCountryCode }) {
                             <h2 className="text-3xl font-bold">{country.name.official}</h2>
                             <div className="flex flex-col gap-8 md:flex-row">
                                 <div>
-                                    <Info
-                                        name="Native Name"
-                                        value={
-                                            country.name.nativeName[Object.keys(country.name.nativeName)[0]].official
-                                        }
-                                    />
+                                    {country.name.nativeName && (
+                                        <Info
+                                            name="Native Name"
+                                            value={
+                                                country.name.nativeName[Object.keys(country.name.nativeName)[0]]
+                                                    .official
+                                            }
+                                        />
+                                    )}
                                     <Info name="Population" value={country.population.toLocaleString('en-US')} />
                                     <Info name="Region" value={country.region} />
-                                    <Info name="Sub Region" value={country.subregion} />
+                                    {country.subregion && <Info name="Sub Region" value={country.subregion} />}
                                     {country.capital && <Info name="Capital" value={country.capital.join(', ')} />}
                                 </div>
                                 <div>
                                     <Info name="Top Level Domain" value={country.tld.join(', ')} />
-                                    <Info
-                                        name="Currencies"
-                                        value={Object.keys(country.currencies)
-                                            .map((key) => country.currencies[key].name)
-                                            .join(', ')}
-                                    />
-                                    <Info
-                                        name="Languages"
-                                        value={Object.keys(country.languages)
-                                            .map((key) => country.languages[key])
-                                            .join(', ')}
-                                    />
+                                    {country.currencies && (
+                                        <Info
+                                            name="Currencies"
+                                            value={Object.keys(country.currencies)
+                                                .map((key) => country.currencies[key].name)
+                                                .join(', ')}
+                                        />
+                                    )}
+                                    {country.languages && (
+                                        <Info
+                                            name="Languages"
+                                            value={Object.keys(country.languages)
+                                                .map((key) => country.languages[key])
+                                                .join(', ')}
+                                        />
+                                    )}
                                 </div>
                             </div>
                             {borderCountries && (
