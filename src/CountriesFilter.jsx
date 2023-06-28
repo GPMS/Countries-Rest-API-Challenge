@@ -3,7 +3,7 @@ import { MdSearch } from 'react-icons/md';
 
 import CountryCard from './components/CountryCard';
 
-const API = 'https://restcountries.com/v3.1/';
+import { getAllCountries, searchByRegion } from './config';
 
 export default function CountriesFilter({ setCountryCode }) {
     const [filterText, setFilterText] = useState('');
@@ -14,9 +14,9 @@ export default function CountriesFilter({ setCountryCode }) {
     useEffect(() => {
         async function fetchCountries() {
             setCountries(null);
-            const endpoint = filterRegion === 'default' ? 'all' : `region/${filterRegion.toLowerCase()}`;
+            const url = filterRegion === 'default' ? getAllCountries : searchByRegion(filterRegion);
             try {
-                let res = await fetch(`${API}${endpoint}`);
+                let res = await fetch(url);
                 const countries = await res.json();
                 setCountries(countries);
             } catch (e) {
@@ -83,16 +83,30 @@ export default function CountriesFilter({ setCountryCode }) {
                 (shownCountriesCount > 0 ? (
                     <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
                         {countries.map((country, index) => {
-                            if (canShow(country))
+                            if (canShow(country)) {
+                                let countryInfo = {
+                                    name: country.name.official,
+                                    flag: country.flags.png,
+                                    info: [
+                                        { title: 'Population', value: country.population.toLocaleString('en-US') },
+                                        { title: 'Region', value: country.region },
+                                    ],
+                                };
+                                if (country.capital) {
+                                    countryInfo.info.push({
+                                        title: 'Capital',
+                                        value: country.capital.join(','),
+                                    });
+                                }
                                 return (
                                     <CountryCard
                                         key={index}
                                         id={index}
-                                        country={country}
+                                        {...countryInfo}
                                         setCountryIndex={setCountryCode}
                                     />
                                 );
-                            else {
+                            } else {
                                 return null;
                             }
                         })}

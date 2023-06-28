@@ -4,7 +4,7 @@ import Image from './components/Image';
 
 import { useEffect, useState } from 'react';
 
-const API = 'https://restcountries.com/v3.1/';
+import { searchByCode, searchByCodes } from './config';
 
 export default function CountryDetails({ countryCode, setCountryCode }) {
     const [country, setCountry] = useState(null);
@@ -13,11 +13,11 @@ export default function CountryDetails({ countryCode, setCountryCode }) {
     useEffect(() => {
         async function fetchCountry() {
             try {
-                let res = await fetch(`${API}alpha/${countryCode.toLowerCase()}`);
+                let res = await fetch(searchByCode(countryCode));
                 const [country] = await res.json();
                 setCountry(country);
                 if (country.borders) {
-                    res = await fetch(`${API}alpha?codes=${country.borders.join(',')}`);
+                    res = await fetch(searchByCodes(country.borders));
                     const borderCountries = await res.json();
                     setBordersCountries(borderCountries);
                 }
