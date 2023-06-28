@@ -47,7 +47,7 @@ export default function CountriesFilter({ setCountryCode }) {
     const searchId = useId();
 
     return (
-        <main className="container mx-auto flex h-auto grow flex-col px-4 pt-7">
+        <main className="container mx-auto flex h-auto grow flex-col px-4 pt-7 lg:px-0">
             <div className="mb-10 flex flex-col gap-5 lg:flex-row lg:justify-between">
                 <div className="relative">
                     <input
@@ -81,7 +81,7 @@ export default function CountriesFilter({ setCountryCode }) {
             </div>
             {(countries &&
                 (shownCountriesCount > 0 ? (
-                    <div className="grid grid-cols-1 gap-14 lg:grid-cols-4">
+                    <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
                         {countries.map((country, index) => {
                             if (canShow(country))
                                 return (
