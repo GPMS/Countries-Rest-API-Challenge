@@ -82,7 +82,7 @@ export default function CountriesFilter({ setCountryCode }) {
             {(countries &&
                 (shownCountriesCount > 0 ? (
                     <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
-                        {countries.map((country, index) => {
+                        {countries.map((country) => {
                             if (canShow(country)) {
                                 let countryInfo = {
                                     name: country.name.official,
@@ -100,8 +100,8 @@ export default function CountriesFilter({ setCountryCode }) {
                                 }
                                 return (
                                     <CountryCard
-                                        key={index}
-                                        id={index}
+                                        key={country.cca3}
+                                        id={country.cca3}
                                         {...countryInfo}
                                         setCountryIndex={setCountryCode}
                                     />

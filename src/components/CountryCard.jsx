@@ -1,13 +1,12 @@
 import Info from './Info';
 import Image from './Image';
 
-export default function CountryCard({ name, flag, info, setCountryIndex }) {
+export default function CountryCard({ id, name, flag, info, setCountryIndex }) {
     return (
         <div
             className="grid grid-rows-2 overflow-hidden rounded-md bg-white drop-shadow hover:cursor-pointer focus:border focus:border-blue-400 dark:bg-dark-bg-front"
             onClick={() => {
-                console.log(country);
-                setCountryIndex(country.cca3);
+                setCountryIndex(id);
             }}
         >
             <Image className="h-full max-h-[300px]" src={flag} />
