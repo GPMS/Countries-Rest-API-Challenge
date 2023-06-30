@@ -1,18 +1,19 @@
 import { useState } from 'react';
 
-import Header from './components/Header';
 import CountryDetails from './CountryDetails';
 import CountriesFilter from './CountriesFilter';
+import Layout from './Layout';
+import { Routes, Route, redirect } from 'react-router-dom';
 
 export default function App() {
     const [countryCode, setCountryCode] = useState(null);
 
     return (
-        <div className="flex min-h-screen flex-col bg-gray-100 text-gray-950 dark:bg-dark-bg-back dark:text-white">
-            <Header />
-            {(countryCode && (
-                <CountryDetails key={countryCode} countryCode={countryCode} setCountryCode={setCountryCode} />
-            )) || <CountriesFilter setCountryCode={setCountryCode} />}
-        </div>
+        <Routes>
+            <Route path="/" element={<Layout />}>
+                <Route index element={<CountriesFilter />} />
+                <Route path=":countryCode" element={<CountryDetails countryCode={countryCode} />} />
+            </Route>
+        </Routes>
     );
 }

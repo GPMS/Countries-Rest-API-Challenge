@@ -4,6 +4,7 @@ import { MdSearch } from 'react-icons/md';
 import CountryCard from './components/CountryCard';
 
 import { getAllCountries, searchByRegion } from './config';
+import { Link } from 'react-router-dom';
 
 export default function CountriesFilter({ setCountryCode }) {
     const [filterText, setFilterText] = useState('');
@@ -99,12 +100,9 @@ export default function CountriesFilter({ setCountryCode }) {
                                     });
                                 }
                                 return (
-                                    <CountryCard
-                                        key={country.cca3}
-                                        id={country.cca3}
-                                        {...countryInfo}
-                                        setCountryIndex={setCountryCode}
-                                    />
+                                    <Link key={country.cca3} to={`/${country.cca3.toLowerCase()}`}>
+                                        <CountryCard id={country.cca3} {...countryInfo} />
+                                    </Link>
                                 );
                             } else {
                                 return null;

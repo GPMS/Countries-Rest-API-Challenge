@@ -1,12 +1,13 @@
 import { twMerge } from 'tailwind-merge';
+import { Link } from 'react-router-dom';
 
-export default function Button({ className, onClick, children }) {
+export default function Button({ className, to, children }) {
     return (
-        <button
-            className={twMerge('rounded border border-black px-8 py-1 dark:border-white', className)}
-            onClick={onClick}
+        <Link
+            className={twMerge('inline-block rounded border border-black px-8 py-1 dark:border-white', className)}
+            to={to}
         >
             {children}
-        </button>
+        </Link>
     );
 }

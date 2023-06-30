@@ -5,8 +5,11 @@ import Image from './components/Image';
 import { useEffect, useState } from 'react';
 
 import { searchByCode, searchByCodes } from './config';
+import { useParams } from 'react-router-dom';
 
-export default function CountryDetails({ countryCode, setCountryCode }) {
+export default function CountryDetails() {
+    const { countryCode } = useParams();
+
     const [country, setCountry] = useState(null);
     const [borderCountries, setBordersCountries] = useState(null);
 
@@ -31,12 +34,7 @@ export default function CountryDetails({ countryCode, setCountryCode }) {
 
     return (
         <main className="container mx-auto px-[5%] pb-[10%]">
-            <Button
-                className="my-10"
-                onClick={() => {
-                    setCountryCode(null);
-                }}
-            >
+            <Button className="my-10" to="/">
                 &larr; Go back
             </Button>
             <div className="gap-30 mx-auto flex flex-col gap-10 lg:flex-row">
@@ -89,10 +87,7 @@ export default function CountryDetails({ countryCode, setCountryCode }) {
                                             <div className="flex flex-wrap gap-2">
                                                 {borderCountries.map((borderCountry, idx) => {
                                                     return (
-                                                        <Button
-                                                            key={idx}
-                                                            onClick={() => setCountryCode(borderCountry.cca3)}
-                                                        >
+                                                        <Button key={idx} to={`/${borderCountry.cca3}`}>
                                                             {borderCountry.name.official}
                                                         </Button>
                                                     );
