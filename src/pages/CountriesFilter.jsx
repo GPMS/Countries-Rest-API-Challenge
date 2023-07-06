@@ -1,12 +1,12 @@
 import { useId, useState, useEffect } from 'react';
 import { MdSearch } from 'react-icons/md';
 
-import CountryCard from './components/CountryCard';
+import CountryCard from '../components/CountryCard';
 
-import { getAllCountries, searchByRegion } from './config';
+import { getAllCountries, searchByRegion } from '../config';
 import { Link } from 'react-router-dom';
 
-import usePagination from './hooks/usePagination';
+import usePagination from '../hooks/usePagination';
 
 export default function CountriesFilter() {
     const [filterText, setFilterText] = useState('');

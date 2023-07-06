@@ -1,10 +1,10 @@
-import Info from './components/Info';
-import Button from './components/Button';
-import Image from './components/Image';
+import Info from '../components/Info';
+import Button from '../components/Button';
+import Image from '../components/Image';
 
 import { useEffect, useState } from 'react';
 
-import { searchByCode, searchByCodes } from './config';
+import { searchByCode, searchByCodes } from '../config';
 import { useParams } from 'react-router-dom';
 
 export default function CountryDetails() {
