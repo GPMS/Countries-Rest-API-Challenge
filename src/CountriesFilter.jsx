@@ -6,27 +6,38 @@ import CountryCard from './components/CountryCard';
 import { getAllCountries, searchByRegion } from './config';
 import { Link } from 'react-router-dom';
 
-export default function CountriesFilter({ setCountryCode }) {
+import usePagination from './hooks/usePagination';
+
+export default function CountriesFilter() {
     const [filterText, setFilterText] = useState('');
     const [filterRegion, setFilterRegion] = useState('default');
 
     const [countries, setCountries] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const ENTRIES_PER_ROW = 4;
+    const ENTRIES_PER_PAGE = 3 * ENTRIES_PER_ROW;
+    const { lastItem, currentPage, resetPage } = usePagination(ENTRIES_PER_PAGE, countries?.length);
+    let renderedEntriesCount = 0;
+    const isPageComplete = (renderedCount) => renderedCount === currentPage * ENTRIES_PER_PAGE;
 
     useEffect(() => {
         async function fetchCountries() {
-            setCountries(null);
+            setIsLoading(true);
             const url = filterRegion === 'default' ? getAllCountries : searchByRegion(filterRegion);
             try {
                 let res = await fetch(url);
                 const countries = await res.json();
                 setCountries(countries);
+                setIsLoading(false);
+                resetPage();
             } catch (e) {
                 console.log(e);
             }
         }
 
         fetchCountries();
-    }, [filterRegion]);
+    }, [filterRegion, resetPage]);
 
     function canShow(country) {
         if (filterText) {
@@ -80,40 +91,49 @@ export default function CountriesFilter({ setCountryCode }) {
                     <option value="Oceania">Oceania</option>
                 </select>
             </div>
-            {(countries &&
-                (shownCountriesCount > 0 ? (
-                    <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
-                        {countries.map((country) => {
-                            if (canShow(country)) {
-                                let countryInfo = {
-                                    name: country.name.official,
-                                    flag: country.flags.png,
-                                    info: [
-                                        { title: 'Population', value: country.population.toLocaleString('en-US') },
-                                        { title: 'Region', value: country.region },
-                                    ],
-                                };
-                                if (country.capital) {
-                                    countryInfo.info.push({
-                                        title: 'Capital',
-                                        value: country.capital.join(','),
-                                    });
-                                }
-                                return (
-                                    <Link key={country.cca3} to={`/${country.cca3.toLowerCase()}`}>
-                                        <CountryCard id={country.cca3} {...countryInfo} />
-                                    </Link>
-                                );
-                            } else {
+            {isLoading ? (
+                <p>Loading</p>
+            ) : shownCountriesCount > 0 ? (
+                <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
+                    {countries.map((country) => {
+                        if (canShow(country)) {
+                            if (isPageComplete(renderedEntriesCount)) {
                                 return null;
                             }
-                        })}
-                    </div>
-                ) : (
-                    <div className="align-center grid h-full grow place-items-center">
-                        <p>No countries found!</p>
-                    </div>
-                ))) || <p>Loading</p>}
+                            renderedEntriesCount++;
+                            let countryInfo = {
+                                name: country.name.official,
+                                flag: country.flags.png,
+                                info: [
+                                    { title: 'Population', value: country.population.toLocaleString('en-US') },
+                                    { title: 'Region', value: country.region },
+                                ],
+                            };
+                            if (country.capital) {
+                                countryInfo.info.push({
+                                    title: 'Capital',
+                                    value: country.capital.join(','),
+                                });
+                            }
+                            return (
+                                <Link
+                                    ref={isPageComplete(renderedEntriesCount) ? lastItem : null}
+                                    key={country.cca3}
+                                    to={`/${country.cca3.toLowerCase()}`}
+                                >
+                                    <CountryCard id={country.cca3} {...countryInfo} />
+                                </Link>
+                            );
+                        } else {
+                            return null;
+                        }
+                    })}
+                </div>
+            ) : (
+                <div className="align-center grid h-full grow place-items-center">
+                    <p>No countries found!</p>
+                </div>
+            )}
         </main>
     );
 }
