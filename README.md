@@ -80,6 +80,9 @@ Users should be able to:
 -   Tailwind CSS
 -   Deployment to Vercel
 -   Fetching data from an API
+-   Routing with React Router
+-   Manual pagination and infinite scrolling
+-   Custom hooks
 
 ### Useful resources
 
