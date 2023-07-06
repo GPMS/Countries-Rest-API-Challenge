@@ -37,7 +37,7 @@ export default function CountriesFilter() {
         }
 
         fetchCountries();
-    }, [filterRegion, resetPage]);
+    }, [filterRegion]);
 
     function canShow(country) {
         if (filterText) {
