@@ -40,7 +40,9 @@ export default function CountriesFilter() {
 
     function canShow(country) {
         if (filterText) {
-            let names = country.altSpellings ? [country.name.official, ...country.altSpellings] : [country.name];
+            let names = country.altSpellings
+                ? [country.name.official, ...country.altSpellings]
+                : [country.name.official];
             if (!names.some((name) => name.toLowerCase().includes(filterText.toLowerCase()))) {
                 return false;
             }
