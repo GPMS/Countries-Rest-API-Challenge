@@ -2,35 +2,19 @@ import Info from '../components/Info';
 import Button from '../components/Button';
 import Image from '../components/Image';
 
-import { useEffect, useState } from 'react';
-
-import { searchByCode, searchByCodes } from '../config';
 import { useParams } from 'react-router-dom';
+import useCountries from '../hooks/useCountries';
 
 export default function CountryDetails() {
     const { countryCode } = useParams();
 
-    const [country, setCountry] = useState(null);
-    const [borderCountries, setBordersCountries] = useState(null);
-
-    useEffect(() => {
-        async function fetchCountry() {
-            try {
-                let res = await fetch(searchByCode(countryCode));
-                const [country] = await res.json();
-                setCountry(country);
-                if (country.borders) {
-                    res = await fetch(searchByCodes(country.borders));
-                    const borderCountries = await res.json();
-                    setBordersCountries(borderCountries);
-                }
-            } catch (e) {
-                console.log(e);
-            }
-        }
-
-        fetchCountry();
-    }, [countryCode]);
+    const { data, isLoading, error } = useCountries({ code: countryCode });
+    let country = null;
+    let borderCountries = null;
+    if (!isLoading && !error) {
+        country = data.country;
+        borderCountries = data.borderCountries;
+    }
 
     return (
         <main className="container mx-auto px-[5%] pb-[10%]">
@@ -38,7 +22,14 @@ export default function CountryDetails() {
                 &larr; Go back
             </Button>
             <div className="gap-30 mx-auto flex flex-col gap-10 lg:flex-row">
-                {(country && (
+                {isLoading && <p>Loading</p>}
+                {!isLoading && error && (
+                    <>
+                        <h2>Error: could not load country</h2>
+                        <p>{error}</p>
+                    </>
+                )}
+                {!isLoading && !error && (
                     <>
                         <Image className="mx-auto max-h-[400px] max-w-[500px] lg:mx-0" src={country.flags.png} />
                         <div className="flex flex-col gap-10">
@@ -99,7 +90,7 @@ export default function CountryDetails() {
                             )}
                         </div>
                     </>
-                )) || <p>Loading</p>}
+                )}
             </div>
         </main>
     );

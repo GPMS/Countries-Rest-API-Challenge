@@ -3,7 +3,7 @@ import { MdSearch } from 'react-icons/md';
 
 import CountryCard from '../components/CountryCard';
 
-import { getAllCountries, searchByRegion } from '../config';
+import useCountries from '../hooks/useCountries';
 import { Link } from 'react-router-dom';
 
 import usePagination from '../hooks/usePagination';
@@ -12,8 +12,7 @@ export default function CountriesFilter() {
     const [filterText, setFilterText] = useState('');
     const [filterRegion, setFilterRegion] = useState('default');
 
-    const [countries, setCountries] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const { data: countries, isLoading, error } = useCountries({ region: filterRegion });
 
     const ENTRIES_PER_ROW = 4;
     const ENTRIES_PER_PAGE = 3 * ENTRIES_PER_ROW;
@@ -22,21 +21,7 @@ export default function CountriesFilter() {
     const isPageComplete = (renderedCount) => renderedCount === currentPage * ENTRIES_PER_PAGE;
 
     useEffect(() => {
-        async function fetchCountries() {
-            setIsLoading(true);
-            const url = filterRegion === 'default' ? getAllCountries : searchByRegion(filterRegion);
-            try {
-                let res = await fetch(url);
-                const countries = await res.json();
-                setCountries(countries);
-                setIsLoading(false);
-                resetPage();
-            } catch (e) {
-                console.log(e);
-            }
-        }
-
-        fetchCountries();
+        resetPage();
     }, [filterRegion]);
 
     function canShow(country) {
@@ -50,7 +35,7 @@ export default function CountriesFilter() {
     }
 
     let shownCountriesCount = 0;
-    if (countries) {
+    if (!isLoading && !error && countries) {
         shownCountriesCount = countries.reduce((prevValue, country) => {
             return canShow(country) ? prevValue + 1 : prevValue;
         }, 0);
@@ -91,9 +76,14 @@ export default function CountriesFilter() {
                     <option value="Oceania">Oceania</option>
                 </select>
             </div>
-            {isLoading ? (
-                <p>Loading</p>
-            ) : shownCountriesCount > 0 ? (
+            {isLoading && <p>Loading</p>}
+            {error && (
+                <>
+                    <h2>Error loading countries</h2>
+                    <p>{error}</p>
+                </>
+            )}
+            {!isLoading && !error && shownCountriesCount > 0 && (
                 <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
                     {countries.map((country) => {
                         if (canShow(country)) {
@@ -129,7 +119,8 @@ export default function CountriesFilter() {
                         }
                     })}
                 </div>
-            ) : (
+            )}
+            {!isLoading && !error && shownCountriesCount == 0 && (
                 <div className="align-center grid h-full grow place-items-center">
                     <p>No countries found!</p>
                 </div>
