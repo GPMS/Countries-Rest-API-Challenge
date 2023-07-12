@@ -1,12 +1,26 @@
 import { useId, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { MdSearch } from 'react-icons/md';
 
-import CountryCard from '../components/CountryCard';
+import Image from '../components/Image';
+import Info from '../components/Info';
 
 import useCountries from '../hooks/useCountries';
-import { Link } from 'react-router-dom';
-
 import usePagination from '../hooks/usePagination';
+
+function CountryCard({ id, name, flag, info }) {
+    return (
+        <article className="grid h-full grid-rows-2 overflow-hidden rounded-md bg-white drop-shadow hover:cursor-pointer focus:border focus:border-blue-400 dark:bg-dark-bg-front">
+            <Image className="h-full max-h-[300px]" src={flag} />
+            <div className="p-5">
+                <h2 className="mb-5 text-xl font-bold">{name}</h2>
+                {info.map((el, idx) => (
+                    <Info key={idx} name={el.title} value={el.value} />
+                ))}
+            </div>
+        </article>
+    );
+}
 
 export default function CountriesFilter() {
     const [filterText, setFilterText] = useState('');
@@ -45,7 +59,7 @@ export default function CountriesFilter() {
 
     return (
         <main className="container mx-auto flex h-auto grow flex-col px-4 pt-7 lg:px-0">
-            <div className="mb-10 flex flex-col gap-5 lg:flex-row lg:justify-between">
+            <section className="mb-10 flex flex-col gap-5 lg:flex-row lg:justify-between">
                 <div className="relative">
                     <input
                         id={searchId}
@@ -75,16 +89,20 @@ export default function CountriesFilter() {
                     <option value="Europe">Europe</option>
                     <option value="Oceania">Oceania</option>
                 </select>
-            </div>
-            {isLoading && <p>Loading</p>}
+            </section>
+            {isLoading && (
+                <section>
+                    <p>Loading</p>
+                </section>
+            )}
             {error && (
-                <>
+                <section>
                     <h2>Error loading countries</h2>
                     <p>{error}</p>
-                </>
+                </section>
             )}
             {!isLoading && !error && shownCountriesCount > 0 && (
-                <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
+                <section className="grid grid-cols-1 gap-12 lg:grid-cols-4">
                     {countries.map((country) => {
                         if (canShow(country)) {
                             if (isPageComplete(renderedEntriesCount)) {
@@ -111,19 +129,19 @@ export default function CountriesFilter() {
                                     key={country.cca3}
                                     to={`/${country.cca3.toLowerCase()}`}
                                 >
-                                    <CountryCard id={country.cca3} {...countryInfo} />
+                                    <CountryCard {...countryInfo} />
                                 </Link>
                             );
                         } else {
                             return null;
                         }
                     })}
-                </div>
+                </section>
             )}
             {!isLoading && !error && shownCountriesCount == 0 && (
-                <div className="align-center grid h-full grow place-items-center">
+                <section className="align-center grid h-full grow place-items-center">
                     <p>No countries found!</p>
-                </div>
+                </section>
             )}
         </main>
     );

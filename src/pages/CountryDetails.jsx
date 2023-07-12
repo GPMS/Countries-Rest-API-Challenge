@@ -1,9 +1,21 @@
+import { useParams, Link } from 'react-router-dom';
+import { twMerge } from 'tailwind-merge';
+
 import Info from '../components/Info';
-import Button from '../components/Button';
 import Image from '../components/Image';
 
-import { useParams } from 'react-router-dom';
 import useCountries from '../hooks/useCountries';
+
+function Button({ className, to, children }) {
+    return (
+        <Link
+            className={twMerge('inline-block rounded border border-black px-8 py-1 dark:border-white', className)}
+            to={to}
+        >
+            {children}
+        </Link>
+    );
+}
 
 export default function CountryDetails() {
     const { countryCode } = useParams();
