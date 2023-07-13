@@ -1,4 +1,4 @@
-import { getAllCountries, searchByRegion, searchByCodes } from '../config';
+import countriesService from '../countriesAPI';
 import { useState, useEffect } from 'react';
 
 export default function useCountries({ region = 'default', code = '' }) {
@@ -12,24 +12,11 @@ export default function useCountries({ region = 'default', code = '' }) {
             try {
                 let data = {};
                 if (code) {
-                    let res = await fetch(searchByCodes([code]));
-                    const [country] = await res.json();
-                    data.country = country;
-                    let borderCountries = null;
-                    if (country.borders) {
-                        res = await fetch(searchByCodes(country.borders));
-                        borderCountries = await res.json();
-                    }
-                    data.borderCountries = borderCountries;
+                    data = await countriesService.getCountry(code);
+                } else if (region === 'default') {
+                    data = await countriesService.getAllCountries();
                 } else {
-                    let url;
-                    if (region !== 'default') {
-                        url = searchByRegion(region);
-                    } else {
-                        url = getAllCountries();
-                    }
-                    const res = await fetch(url);
-                    data = await res.json();
+                    data = await countriesService.getCountriesByRegion(region);
                 }
                 setData(data);
             } catch (e) {
