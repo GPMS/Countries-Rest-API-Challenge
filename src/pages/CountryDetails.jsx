@@ -63,7 +63,7 @@ export default function CountryDetails() {
                                     {country.capital && <Info name="Capital" value={country.capital.join(', ')} />}
                                 </div>
                                 <div>
-                                    <Info name="Top Level Domain" value={country.tld.join(', ')} />
+                                    {country.tld && <Info name="Top Level Domain" value={country.tld.join(', ')} />}
                                     {country.currencies && (
                                         <Info
                                             name="Currencies"
