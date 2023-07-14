@@ -9,9 +9,9 @@ export default function useDarkMode() {
     });
 
     function toggleDarkMode() {
-        setDarkMode((oldState) => {
-            localStorage.setItem('countries-darkMode', JSON.stringify(darkMode));
-            return !oldState;
+        setDarkMode((currentState) => {
+            localStorage.setItem('countries-darkMode', JSON.stringify(!currentState));
+            return !currentState;
         });
     }
 
