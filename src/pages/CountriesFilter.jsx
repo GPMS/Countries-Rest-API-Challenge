@@ -1,5 +1,5 @@
 import { useId, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { MdSearch } from 'react-icons/md';
 
 import Image from '../components/Image';
@@ -23,8 +23,10 @@ function CountryCard({ id, name, flag, info }) {
 }
 
 export default function CountriesFilter() {
-    const [filterText, setFilterText] = useState('');
-    const [filterRegion, setFilterRegion] = useState('default');
+    let [searchParams, setSearchParams] = useSearchParams();
+
+    const filterText = searchParams.get('q') || '';
+    const filterRegion = searchParams.get('region') || 'default';
 
     const { data: countries, isLoading, error } = useCountries({ region: filterRegion });
 
@@ -34,9 +36,26 @@ export default function CountriesFilter() {
     let renderedEntriesCount = 0;
     const isPageComplete = (renderedCount) => renderedCount === currentPage * ENTRIES_PER_PAGE;
 
-    useEffect(() => {
+    function handleInput(e) {
         resetPage();
-    }, [filterRegion]);
+        const { name, value } = e.target;
+        if (name === 'q' && value.length === 0) {
+            setSearchParams((searchParams) => {
+                searchParams.delete(name);
+                return searchParams;
+            });
+        } else if (name === 'region' && value === 'default') {
+            setSearchParams((searchParams) => {
+                searchParams.delete(name);
+                return searchParams;
+            });
+        } else {
+            setSearchParams((searchParams) => {
+                searchParams.set(name, value);
+                return searchParams;
+            });
+        }
+    }
 
     function canShow(country) {
         if (filterText) {
@@ -66,13 +85,12 @@ export default function CountriesFilter() {
                 <div className="relative">
                     <input
                         id={searchId}
-                        onInput={(e) => {
-                            setFilterText(e.target.value);
-                        }}
+                        onInput={handleInput}
                         className="w-full rounded p-4 pl-[2rem] text-sm drop-shadow focus-visible:border-violet-800 dark:bg-dark-bg-front dark:text-white lg:w-[500px]"
                         type="search"
-                        name="text"
+                        name="q"
                         placeholder="Search for a country..."
+                        value={filterText}
                     />
                     <label htmlFor={searchId} className="absolute left-[.5rem] translate-y-[100%] scale-125">
                         <MdSearch title="Search icon" />
@@ -81,16 +99,15 @@ export default function CountriesFilter() {
                 <select
                     id={selectId}
                     className="block rounded bg-white p-2 dark:border-black dark:bg-dark-bg-front"
-                    onChange={(e) => {
-                        setFilterRegion(e.target.value);
-                    }}
+                    onChange={handleInput}
                     name="region"
+                    value={filterRegion}
                 >
                     <option aria-label="default" value="default">
                         --Filter by Region--
                     </option>
                     <option value="Africa">Africa</option>
-                    <option value="Americas">America</option>
+                    <option value="Americas">Americas</option>
                     <option value="Asia">Asia</option>
                     <option value="Europe">Europe</option>
                     <option value="Oceania">Oceania</option>
