@@ -16,12 +16,12 @@ export default function App() {
                     <button className="flex items-center gap-2" onClick={toggleDarkMode}>
                         {(darkMode && (
                             <>
-                                <MdDarkMode tile="" />
+                                <MdDarkMode aria-label="dark mode" />
                                 Dark mode
                             </>
                         )) || (
                             <>
-                                <MdOutlineDarkMode title="" />
+                                <MdOutlineDarkMode aria-label="light mode" />
                                 Light mode
                             </>
                         )}

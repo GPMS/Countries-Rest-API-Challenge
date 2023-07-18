@@ -58,10 +58,11 @@ export default function CountriesFilter() {
     }
 
     const searchId = useId();
+    const selectId = useId();
 
     return (
         <main className="container mx-auto flex h-auto grow flex-col px-4 pt-7 lg:px-0">
-            <section className="mb-10 flex flex-col gap-5 lg:flex-row lg:justify-between">
+            <section title="filters" className="mb-10 flex flex-col gap-5 lg:flex-row lg:justify-between">
                 <div className="relative">
                     <input
                         id={searchId}
@@ -69,28 +70,34 @@ export default function CountriesFilter() {
                             setFilterText(e.target.value);
                         }}
                         className="w-full rounded p-4 pl-[2rem] text-sm drop-shadow focus-visible:border-violet-800 dark:bg-dark-bg-front dark:text-white lg:w-[500px]"
-                        type="text"
+                        type="search"
                         name="text"
                         placeholder="Search for a country..."
                     />
                     <label htmlFor={searchId} className="absolute left-[.5rem] translate-y-[100%] scale-125">
-                        <MdSearch title="Search" />
+                        <MdSearch title="Search icon" />
                     </label>
                 </div>
                 <select
+                    id={selectId}
                     className="block rounded bg-white p-2 dark:border-black dark:bg-dark-bg-front"
                     onChange={(e) => {
                         setFilterRegion(e.target.value);
                     }}
                     name="region"
                 >
-                    <option value="default">--Filter by Region--</option>
+                    <option aria-label="default" value="default">
+                        --Filter by Region--
+                    </option>
                     <option value="Africa">Africa</option>
                     <option value="Americas">America</option>
                     <option value="Asia">Asia</option>
                     <option value="Europe">Europe</option>
                     <option value="Oceania">Oceania</option>
                 </select>
+                <label className="sr-only" htmlFor={selectId}>
+                    Region filter
+                </label>
             </section>
             {isLoading && (
                 <section>
@@ -104,7 +111,7 @@ export default function CountriesFilter() {
                 </section>
             )}
             {!isLoading && !error && shownCountriesCount > 0 && (
-                <section className="grid grid-cols-1 gap-12 lg:grid-cols-4">
+                <section title="countries" className="grid grid-cols-1 gap-12 lg:grid-cols-4">
                     {countries.map((country) => {
                         if (canShow(country)) {
                             if (isPageComplete(renderedEntriesCount)) {
@@ -129,6 +136,7 @@ export default function CountriesFilter() {
                                 <Link
                                     ref={isPageComplete(renderedEntriesCount) ? lastItem : null}
                                     key={country.cca3}
+                                    aria-label={countryInfo.name}
                                     to={`/${country.cca3.toLowerCase()}`}
                                 >
                                     <CountryCard {...countryInfo} />
@@ -141,7 +149,7 @@ export default function CountriesFilter() {
                 </section>
             )}
             {!isLoading && !error && shownCountriesCount == 0 && (
-                <section className="align-center grid h-full grow place-items-center">
+                <section title="countries" className="align-center grid h-full grow place-items-center">
                     <p>No countries found!</p>
                 </section>
             )}
