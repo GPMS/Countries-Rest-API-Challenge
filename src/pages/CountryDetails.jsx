@@ -46,7 +46,7 @@ export default function CountryDetails() {
                         <Image className="mx-auto max-h-[400px] max-w-[500px] lg:mx-0" src={country.flags.png} />
                         <div className="flex flex-col gap-10">
                             <h2 className="text-3xl font-bold">{country.name.official}</h2>
-                            <div className="flex flex-col gap-8 md:flex-row">
+                            <div className="flex flex-col gap-8 text-sm md:flex-row">
                                 <div>
                                     {country.name.nativeName && (
                                         <Info
@@ -90,7 +90,11 @@ export default function CountryDetails() {
                                             <div className="flex flex-wrap gap-2">
                                                 {borderCountries.map((borderCountry, idx) => {
                                                     return (
-                                                        <Button key={idx} to={`/${borderCountry.cca3}`}>
+                                                        <Button
+                                                            key={idx}
+                                                            className="text-sm"
+                                                            to={`/${borderCountry.cca3}`}
+                                                        >
                                                             {borderCountry.name.official}
                                                         </Button>
                                                     );
