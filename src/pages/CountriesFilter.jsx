@@ -128,7 +128,7 @@ export default function CountriesFilter() {
                 </section>
             )}
             {!isLoading && !error && shownCountriesCount > 0 && (
-                <section title="countries" className="grid grid-cols-1 gap-12 lg:grid-cols-4">
+                <section title="countries" className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
                     {countries.map((country) => {
                         if (canShow(country)) {
                             if (isPageComplete(renderedEntriesCount)) {
