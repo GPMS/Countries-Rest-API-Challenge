@@ -17,13 +17,13 @@ export default function App() {
                         <button className="flex items-center gap-2" onClick={toggleDarkMode}>
                             {(darkMode && (
                                 <>
-                                    <MdDarkMode aria-label="dark mode" />
-                                    Dark mode
+                                    <MdOutlineDarkMode aria-label="light mode" />
+                                    Light mode
                                 </>
                             )) || (
                                 <>
-                                    <MdOutlineDarkMode aria-label="light mode" />
-                                    Light mode
+                                    <MdDarkMode aria-label="dark mode" />
+                                    Dark mode
                                 </>
                             )}
                         </button>
