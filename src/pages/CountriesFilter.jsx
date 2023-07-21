@@ -26,19 +26,12 @@ function FilterControls({ setSearchParams, filterText, filterRegion, onChangeFil
     function handleInput(e) {
         onChangeFilter();
         const { name, value } = e.target;
-        if (name === 'q' && value.length === 0) {
             setSearchParams((searchParams) => {
+            if ((name === 'q' && value.length === 0) || (name === 'region' && value === 'default')) {
                 searchParams.delete(name);
-                return searchParams;
-            });
-        } else if (name === 'region' && value === 'default') {
-            setSearchParams((searchParams) => {
-                searchParams.delete(name);
-                return searchParams;
-            });
         } else {
-            setSearchParams((searchParams) => {
                 searchParams.set(name, value);
+            }
                 return searchParams;
             });
         }
