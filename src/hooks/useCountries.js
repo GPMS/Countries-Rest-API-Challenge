@@ -8,7 +8,9 @@ export default function useCountries({ region = 'default', code = '' }) {
 
     useEffect(() => {
         async function fetchCountries() {
-            setIsLoading(true);
+            if (!isLoading) {
+                setIsLoading(true);
+            }
             try {
                 let data = {};
                 if (code) {
