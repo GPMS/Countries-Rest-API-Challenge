@@ -1,4 +1,4 @@
-import { useId, useMemo } from 'react';
+import { useEffect, useId, useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { MdSearch } from 'react-icons/md';
 
@@ -22,19 +22,17 @@ function CountryCard({ id, name, flag, info }) {
     );
 }
 
-function FilterControls({ setSearchParams, filterText, filterRegion, onChangeFilter }) {
+function FilterControls({ setSearchParams, filterText, filterRegion }) {
     function handleInput(e) {
-        onChangeFilter();
         const { name, value } = e.target;
-            setSearchParams((searchParams) => {
+        setSearchParams((searchParams) => {
             if ((name === 'q' && value.length === 0) || (name === 'region' && value === 'default')) {
                 searchParams.delete(name);
-        } else {
+            } else {
                 searchParams.set(name, value);
             }
-                return searchParams;
-            });
-        }
+            return searchParams;
+        });
     }
 
     const searchId = useId();
@@ -79,7 +77,30 @@ function FilterControls({ setSearchParams, filterText, filterRegion, onChangeFil
     );
 }
 
-function CountriesGrid({ countries, isLoading, error, lastItem, entriesPerPage, currentPage }) {
+function CountriesGrid({ filterText, filterRegion }) {
+    const { data: countries, isLoading, error } = useCountries({ region: filterRegion });
+
+    const ENTRIES_PER_ROW = 4;
+    const ENTRIES_PER_PAGE = 3 * ENTRIES_PER_ROW;
+    const { lastItem, currentPage, resetPage } = usePagination(ENTRIES_PER_PAGE, countries?.length);
+
+    const filteredCountries = useMemo(() => {
+        if (!countries) return null;
+        return countries.filter((country) => {
+            if (filterText) {
+                const names = country.altSpellings
+                    ? [country.name.official, ...country.altSpellings]
+                    : [country.name.official];
+                return names.some((name) => name.toLowerCase().includes(filterText.toLowerCase()));
+            }
+            return true;
+        });
+    }, [countries, filterText]);
+
+    useEffect(() => {
+        resetPage();
+    }, [filterText, filterRegion]);
+
     if (isLoading) {
         return (
             <section title="countries" className="align-center grid h-full grow place-items-center">
@@ -99,7 +120,11 @@ function CountriesGrid({ countries, isLoading, error, lastItem, entriesPerPage, 
         );
     }
 
-    if (countries.length === 0) {
+    if (!filteredCountries) {
+        return;
+    }
+
+    if (filteredCountries?.length === 0) {
         return (
             <section title="countries" className="align-center grid h-full grow place-items-center">
                 <p>No countries found!</p>
@@ -107,11 +132,11 @@ function CountriesGrid({ countries, isLoading, error, lastItem, entriesPerPage, 
         );
     }
 
-    const maxRenderElements = currentPage * entriesPerPage;
+    const maxRenderElements = currentPage * ENTRIES_PER_PAGE;
 
     return (
         <section title="countries" className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
-            {countries.map((country, i) => {
+            {filteredCountries.map((country, i) => {
                 if (i >= maxRenderElements) {
                     return null;
                 }
@@ -150,41 +175,10 @@ export default function CountriesFilter() {
     const filterText = searchParams.get('q') || '';
     const filterRegion = searchParams.get('region') || 'default';
 
-    const { data: countries, isLoading, error } = useCountries({ region: filterRegion });
-
-    const ENTRIES_PER_ROW = 4;
-    const ENTRIES_PER_PAGE = 3 * ENTRIES_PER_ROW;
-    const { lastItem, currentPage, resetPage } = usePagination(ENTRIES_PER_PAGE, countries?.length);
-
-    const filteredCountries = useMemo(() => {
-        if (!countries) return null;
-        return countries.filter((country) => {
-            if (filterText) {
-                const names = country.altSpellings
-                    ? [country.name.official, ...country.altSpellings]
-                    : [country.name.official];
-                return names.some((name) => name.toLowerCase().includes(filterText.toLowerCase()));
-            }
-            return true;
-        });
-    }, [countries, filterText]);
-
     return (
         <main className="container mx-auto flex h-auto grow flex-col px-4 pt-7 lg:px-0">
-            <FilterControls
-                setSearchParams={setSearchParams}
-                filterText={filterText}
-                filterRegion={filterRegion}
-                onChangeFilter={() => resetPage}
-            />
-            <CountriesGrid
-                countries={filteredCountries}
-                isLoading={isLoading}
-                error={error}
-                lastItem={lastItem}
-                entriesPerPage={ENTRIES_PER_PAGE}
-                currentPage={currentPage}
-            />
+            <FilterControls setSearchParams={setSearchParams} filterText={filterText} filterRegion={filterRegion} />
+            <CountriesGrid filterText={filterText} filterRegion={filterRegion} />
         </main>
     );
 }
