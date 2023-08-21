@@ -17,8 +17,8 @@ const countriesService = {
         return res.data;
     },
     getCountry: async (code) => {
-        const [country] = await api.get(`/alpha/${code}`).data;
-        let borderCountries = country.borders ? await api.get(`/alpha?codes=${country.borders}`).data : null;
+        const [country] = (await api.get(`/alpha/${code}`)).data;
+        let borderCountries = country.borders ? (await api.get(`/alpha?codes=${country.borders}`)).data : null;
         return {
             country,
             borderCountries,
